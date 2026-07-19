@@ -1,0 +1,6 @@
+CREATE SEQUENCE scopes_seq START 1 INCREMENT 1;
+
+CREATE TABLE scopes (
+    id BIGINT PRIMARY KEY DEFAULT nextval('scopes_seq'),
+    nome VARCHAR(100) NOT NULL UNIQUE
+);

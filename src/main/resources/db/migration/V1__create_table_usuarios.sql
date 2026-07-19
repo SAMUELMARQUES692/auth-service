@@ -1,0 +1,9 @@
+CREATE SEQUENCE usuarios_seq START 1 INCREMENT 1;
+
+CREATE TABLE usuarios(
+    id BIGINT PRIMARY KEY DEFAULT nextval('usuarios_seq'),
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
