@@ -1,5 +1,6 @@
 package dev.samuel.auth_service.controller;
 
+import dev.samuel.auth_service.documentation.AuthControllerDoc;
 import dev.samuel.auth_service.request.AuthRequest;
 import dev.samuel.auth_service.response.AuthResponse;
 import dev.samuel.auth_service.service.AuthService;
@@ -14,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/auth/login")
-public class AuthController {
+public class AuthController implements AuthControllerDoc {
 
     private final AuthService authService;
 

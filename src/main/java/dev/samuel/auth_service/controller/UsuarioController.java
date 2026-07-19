@@ -1,5 +1,6 @@
 package dev.samuel.auth_service.controller;
 
+import dev.samuel.auth_service.documentation.UsuarioControllerDoc;
 import dev.samuel.auth_service.request.UsuarioRequest;
 import dev.samuel.auth_service.response.UsuarioResponse;
 import dev.samuel.auth_service.service.UsuarioService;
@@ -15,7 +16,7 @@ import java.net.URI;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/usuarios")
-public class UsuarioController {
+public class UsuarioController implements UsuarioControllerDoc {
 
     private final UsuarioService usuarioService;
 
