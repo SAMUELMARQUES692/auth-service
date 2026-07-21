@@ -1,5 +1,7 @@
 package dev.samuel.auth_service.handler;
 
+import dev.samuel.auth_service.exception.EmailJaCadastradoException;
+import dev.samuel.auth_service.exception.EmailNotFoundException;
 import dev.samuel.auth_service.exception.UserOrPasswordIncorrectException;
 import dev.samuel.auth_service.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -17,12 +19,34 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UserOrPasswordIncorrectException.class)
     public ResponseEntity<ErrorResponse> userAndPasswordIncorrect(UserOrPasswordIncorrectException exception) {
         ErrorResponse error = new ErrorResponse(
-                "BAD_CREDENTIAL",
+                "CREDENCIAIS_INCORRETAS",
                 exception.getMessage(),
                 LocalDateTime.now()
         );
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
     }
+
+
+    @ExceptionHandler(EmailJaCadastradoException.class)
+    public ResponseEntity<ErrorResponse> emailDuplicado(EmailJaCadastradoException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "EMAIL_JA_CADASTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(error);
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<ErrorResponse> emailDuplicado(EmailNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "EMAIL_NAO_ENCONTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
 
     // Fallback para erros inesperados
     @ExceptionHandler(Exception.class)
