@@ -7,7 +7,7 @@ import dev.samuel.auth_service.exception.EmailNotFoundException;
 import dev.samuel.auth_service.mapper.UsuarioMapper;
 import dev.samuel.auth_service.repository.UsuarioRepository;
 import dev.samuel.auth_service.request.UsuarioRequest;
-import dev.samuel.auth_service.response.UsuarioCadastradoEvent;
+import dev.samuel.auth_service.response.UsuarioEvent;
 import dev.samuel.auth_service.response.UsuarioResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +41,7 @@ public class UsuarioService {
         newUsuario.setScopes(scopes);
         newUsuario.setSenha(passwordEncoder.encode(request.senha()));
         Usuario salvar = usuarioRepository.save(newUsuario);
-        eventPublisher.publicarUsuarioCadastrado(new UsuarioCadastradoEvent(salvar.getNome(), salvar.getEmail()));
+        eventPublisher.publicarUsuarioCadastrado(new UsuarioEvent(salvar.getNome(), salvar.getEmail()));
         return usuarioMapper.toUsuarioResponse(salvar);
     }
 
@@ -58,6 +58,7 @@ public class UsuarioService {
 
         usuarioMapper.atualizarUsuario(request, usuario);
         Usuario salvo = usuarioRepository.save(usuario);
+        eventPublisher.publicarUsuarioAtualizado(new UsuarioEvent(salvo.getNome(), salvo.getEmail()));
         return usuarioMapper.toUsuarioResponse(salvo);
     }
 
