@@ -1,20 +1,22 @@
 package dev.samuel.auth_service.service;
 
+import dev.samuel.auth_service.entity.Scope;
 import dev.samuel.auth_service.entity.Usuario;
 import dev.samuel.auth_service.exception.EmailJaCadastradoException;
 import dev.samuel.auth_service.mapper.UsuarioMapper;
 import dev.samuel.auth_service.repository.UsuarioRepository;
 import dev.samuel.auth_service.request.UsuarioRequest;
+import dev.samuel.auth_service.response.UsuarioEvent;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,34 +27,192 @@ class UsuarioServiceTest {
     UsuarioService usuarioService;
 
     @Mock
+    ScopeService scopeService;
+
+    @Mock
     UsuarioRepository usuarioRepository;
 
     @Mock
     UsuarioMapper usuarioMapper;
 
+    @Mock
+    PasswordEncoder passwordEncoder;
+
+    @Mock
+    EventPublisher eventPublisher;
+
+    @Captor
+    ArgumentCaptor<Usuario> argumentCaptor;
+
     @Test
     void cadastrar() {
-    }
+        Scope scope = Scope.builder()
+                .id(1L)
+                .nome("nome Test")
+                .build();
 
+        Usuario usuario = Usuario.builder()
+                .id(1L)
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(scope))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        UsuarioRequest request = UsuarioRequest.builder()
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(1L))
+                .build();
+
+        Mockito.when(usuarioRepository.existsByEmail(request.email())).thenReturn(false);
+        Mockito.when(scopeService.findById(1L)).thenReturn(scope);
+        Mockito.when(usuarioMapper.toEntity(request)).thenReturn(usuario);
+        Mockito.when(usuarioRepository.save(usuario)).thenReturn(Mockito.any());
+        Mockito.when(passwordEncoder.encode(request.senha())).thenReturn("senhaCriptografada");
+        Mockito.when(usuarioRepository.save(usuario)).thenReturn(usuario);
+
+        usuarioService.cadastrar(request);
+
+        Mockito.verify(usuarioRepository).existsByEmail(request.email());
+        Mockito.verify(scopeService).findById(1L);
+        Mockito.verify(usuarioMapper).toEntity(request);
+        Mockito.verify(usuarioRepository).save(argumentCaptor.capture());
+        Mockito.verify(eventPublisher).publicarUsuarioCadastrado(Mockito.any());
+        Mockito.verify(usuarioMapper).toUsuarioResponse(usuario);
+    }
 
     @Test
     void buscarTodos() {
+        Scope scope = Scope.builder()
+                .id(1L)
+                .nome("nome Test")
+                .build();
+
+        Usuario usuario = Usuario.builder()
+                .id(1L)
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(scope))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(usuarioRepository.findAll()).thenReturn(List.of(usuario));
+
+        usuarioService.buscarTodos();
+
+        Mockito.verify(usuarioRepository).findAll();
+        Mockito.verify(usuarioMapper).toUsuarioResponse(Mockito.any());
     }
 
     @Test
     void atualizar() {
+        Scope scope = Scope.builder()
+                .id(1L)
+                .nome("nome Test")
+                .build();
+
+        Usuario usuario = Usuario.builder()
+                .id(1L)
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(scope))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        UsuarioRequest request = UsuarioRequest.builder()
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(1L))
+                .build();
+
+        Mockito.when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+        Mockito.when(usuarioRepository.save(usuario)).thenReturn(usuario);
+
+        usuarioService.atualizar(usuario.getId(), request);
+
+        Mockito.verify(usuarioRepository).findById(usuario.getId());
+        Mockito.verify(usuarioMapper).atualizarUsuario(request, usuario);
+        Mockito.verify(usuarioRepository).save(argumentCaptor.capture());
+        Mockito.verify(eventPublisher).publicarUsuarioAtualizado(Mockito.any());
+        Mockito.verify(usuarioMapper).toUsuarioResponse(Mockito.any());
     }
 
     @Test
     void buscarPorEmail() {
+        Scope scope = Scope.builder()
+                .id(1L)
+                .nome("nome Test")
+                .build();
+
+        Usuario usuario = Usuario.builder()
+                .id(1L)
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(scope))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(usuarioRepository.findByEmail(usuario.getEmail())).thenReturn(Optional.of(usuario));
+
+        usuarioService.buscarPorEmail(usuario.getEmail());
+
+        Mockito.verify(usuarioRepository).findByEmail(usuario.getEmail());
+        Mockito.verify(usuarioMapper).toUsuarioResponse(Mockito.any());
     }
 
     @Test
     void buscarPorId() {
+        Scope scope = Scope.builder()
+                .id(1L)
+                .nome("nome Test")
+                .build();
+
+        Usuario usuario = Usuario.builder()
+                .id(1L)
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(scope))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        usuarioService.buscarPorId(usuario.getId());
+
+        Mockito.verify(usuarioRepository).findById(usuario.getId());
+        Mockito.verify(usuarioMapper).toUsuarioResponse(Mockito.any());
     }
 
     @Test
     void deletar() {
+        Scope scope = Scope.builder()
+                .id(1L)
+                .nome("nome Test")
+                .build();
+
+        Usuario usuario = Usuario.builder()
+                .id(1L)
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(scope))
+                .createdAt(LocalDateTime.now())
+                .build();
+
+        Mockito.when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
+
+        usuarioService.deletar(usuario.getId());
+
+        Mockito.verify(usuarioRepository).findById(usuario.getId());
+        Mockito.verify(usuarioRepository).deleteById(usuario.getId());
     }
 
     @Test // este teste serve para testar as exceptions dos metodos da service, caso o email ja exista no banco de dados, ele deve lançar a exception EmailJaCadastradoException
