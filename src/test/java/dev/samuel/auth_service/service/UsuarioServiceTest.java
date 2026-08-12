@@ -48,7 +48,7 @@ class UsuarioServiceTest {
     void cadastrar() {
         Scope scope = Scope.builder()
                 .id(1L)
-                .nome("nome Test")
+                .nome("USER")
                 .build();
 
         Usuario usuario = Usuario.builder()
@@ -64,11 +64,11 @@ class UsuarioServiceTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(1L))
+                .scopes(List.of(scope.getId()))
                 .build();
 
         Mockito.when(usuarioRepository.existsByEmail(request.email())).thenReturn(false);
-        Mockito.when(scopeService.findById(1L)).thenReturn(scope);
+        Mockito.when(scopeService.findByNome(scope.getNome())).thenReturn(scope);
         Mockito.when(usuarioMapper.toEntity(request)).thenReturn(usuario);
         Mockito.when(usuarioRepository.save(usuario)).thenReturn(Mockito.any());
         Mockito.when(passwordEncoder.encode(request.senha())).thenReturn("senhaCriptografada");
@@ -77,7 +77,7 @@ class UsuarioServiceTest {
         usuarioService.cadastrar(request);
 
         Mockito.verify(usuarioRepository).existsByEmail(request.email());
-        Mockito.verify(scopeService).findById(1L);
+        Mockito.verify(scopeService).findByNome(scope.getNome());
         Mockito.verify(usuarioMapper).toEntity(request);
         Mockito.verify(usuarioRepository).save(argumentCaptor.capture());
         Mockito.verify(eventPublisher).publicarUsuarioCadastrado(Mockito.any());

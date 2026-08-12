@@ -33,12 +33,10 @@ public class UsuarioService {
             throw new EmailJaCadastradoException("Este email já esta em uso");
         }
 
-        List<Scope> scopes = request.scopes().stream()
-                .map(scopeService::findById)
-                .toList();
+        Scope scopeUser = scopeService.findByNome("USER");
 
         Usuario newUsuario = usuarioMapper.toEntity(request);
-        newUsuario.setScopes(scopes);
+        newUsuario.setScopes(List.of(scopeUser));
         newUsuario.setSenha(passwordEncoder.encode(request.senha()));
         Usuario salvar = usuarioRepository.save(newUsuario);
         eventPublisher.publicarUsuarioCadastrado(new UsuarioEvent(salvar.getNome(), salvar.getEmail()));

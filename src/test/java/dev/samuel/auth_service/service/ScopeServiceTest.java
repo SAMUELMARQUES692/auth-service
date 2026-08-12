@@ -23,16 +23,16 @@ class ScopeServiceTest {
     ScopeRepository scopeRepository;
 
     @Test
-    void findById() {
+    void findByNome() {
         Scope scope = Scope.builder()
                 .id(1L)
                 .nome("nome Test")
                 .build();
 
-        Mockito.when(scopeRepository.findById(scope.getId())).thenReturn(Optional.of(scope));
+        Mockito.when(scopeRepository.findByNome(scope.getNome())).thenReturn(Optional.of(scope));
 
-        scopeService.findById(scope.getId());
+        scopeService.findByNome(scope.getNome());
 
-        Mockito.verify(scopeRepository).findById(scope.getId());
+        Mockito.verify(scopeRepository).findByNome(scope.getNome());
     }
 }

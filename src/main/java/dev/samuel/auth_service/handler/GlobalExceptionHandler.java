@@ -2,6 +2,7 @@ package dev.samuel.auth_service.handler;
 
 import dev.samuel.auth_service.exception.EmailJaCadastradoException;
 import dev.samuel.auth_service.exception.EmailNotFoundException;
+import dev.samuel.auth_service.exception.ScopeNotFoundException;
 import dev.samuel.auth_service.exception.UserOrPasswordIncorrectException;
 import dev.samuel.auth_service.response.ErrorResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -38,9 +39,19 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(EmailNotFoundException.class)
-    public ResponseEntity<ErrorResponse> emailDuplicado(EmailNotFoundException exception) {
+    public ResponseEntity<ErrorResponse> emailNaoEncontrado(EmailNotFoundException exception) {
         ErrorResponse error = new ErrorResponse(
                 "EMAIL_NAO_ENCONTRADO",
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+    }
+
+    @ExceptionHandler(ScopeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> scopeNaoEncontrado(ScopeNotFoundException exception) {
+        ErrorResponse error = new ErrorResponse(
+                "SCOPE_NAO_ENCONTRADO",
                 exception.getMessage(),
                 LocalDateTime.now()
         );

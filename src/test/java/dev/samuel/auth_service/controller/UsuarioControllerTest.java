@@ -42,17 +42,14 @@ class UsuarioControllerTest extends BaseIntegrationTest {
 
     @Test
     void cadastrar() throws Exception {
-        Scope scope = scopeRepository.save(
-                Scope.builder()
-                        .nome("nome Test")
-                        .build()
-        );
+        scopeRepository.save(Scope.builder().nome("ADMIN").build());
+        Scope scopeUser = scopeRepository.save(Scope.builder().nome("USER").build());
 
         UsuarioRequest request = UsuarioRequest.builder()
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(scope.getId()))
+                .scopes(List.of(1L))
                 .build();
 
         mockMvc.perform(post("/api/usuarios/cadastrar")
@@ -61,6 +58,10 @@ class UsuarioControllerTest extends BaseIntegrationTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.nome").value(request.nome()))
                 .andExpect(jsonPath("$.email").value(request.email()));
+
+        Usuario usuarioSalvo = usuarioRepository.findByEmail(request.email()).orElseThrow();
+        assertEquals(1, usuarioSalvo.getScopes().size());
+        assertEquals("USER", usuarioSalvo.getScopes().get(0).getNome());
     }
 
     @Test
