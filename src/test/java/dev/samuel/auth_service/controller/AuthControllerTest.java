@@ -45,7 +45,6 @@ class AuthControllerTest extends BaseIntegrationTest {
                 Scope.builder()
                 .nome("nome Test")
                 .build()
-
         );
 
         Usuario usuario = usuarioRepository.save(
@@ -56,7 +55,6 @@ class AuthControllerTest extends BaseIntegrationTest {
                 .scopes(List.of(scope))
                 .createdAt(LocalDateTime.now())
                 .build()
-
         );
 
         AuthRequest request = AuthRequest.builder()
