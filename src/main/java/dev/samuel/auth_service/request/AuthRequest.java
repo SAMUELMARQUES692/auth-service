@@ -1,7 +1,9 @@
 package dev.samuel.auth_service.request;
 
 import jakarta.validation.constraints.NotBlank;
+import lombok.Builder;
 
+@Builder
 public record AuthRequest(
 
         @NotBlank
