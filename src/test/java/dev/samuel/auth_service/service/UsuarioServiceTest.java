@@ -3,6 +3,7 @@ package dev.samuel.auth_service.service;
 import dev.samuel.auth_service.entity.Scope;
 import dev.samuel.auth_service.entity.Usuario;
 import dev.samuel.auth_service.exception.EmailJaCadastradoException;
+import dev.samuel.auth_service.exception.EmailNotFoundException;
 import dev.samuel.auth_service.mapper.UsuarioMapper;
 import dev.samuel.auth_service.repository.UsuarioRepository;
 import dev.samuel.auth_service.request.UsuarioRequest;
@@ -70,9 +71,8 @@ class UsuarioServiceTest {
         Mockito.when(usuarioRepository.existsByEmail(request.email())).thenReturn(false);
         Mockito.when(scopeService.findByNome(scope.getNome())).thenReturn(scope);
         Mockito.when(usuarioMapper.toEntity(request)).thenReturn(usuario);
-        Mockito.when(usuarioRepository.save(usuario)).thenReturn(Mockito.any());
-        Mockito.when(passwordEncoder.encode(request.senha())).thenReturn("senhaCriptografada");
         Mockito.when(usuarioRepository.save(usuario)).thenReturn(usuario);
+        Mockito.when(passwordEncoder.encode(request.senha())).thenReturn("senhaCriptografada");
 
         usuarioService.cadastrar(request);
 
@@ -144,6 +144,23 @@ class UsuarioServiceTest {
     }
 
     @Test
+    void atualizar_usuarioNaoEncontrado_deveLancarExcecao() {
+        UsuarioRequest request = UsuarioRequest.builder()
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .scopes(List.of(1L))
+                .build();
+
+        Mockito.when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(EmailNotFoundException.class, () -> usuarioService.atualizar(999L, request));
+
+        Mockito.verify(usuarioRepository, Mockito.never()).save(Mockito.any());
+    }
+
+
+    @Test
     void buscarPorEmail() {
         Scope scope = Scope.builder()
                 .id(1L)
@@ -192,6 +209,14 @@ class UsuarioServiceTest {
     }
 
     @Test
+    void buscarPorId_usuarioNaoEncontrado_deveLancarExcecao() {
+        Mockito.when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(EmailNotFoundException.class, () -> usuarioService.buscarPorId(999L));
+    }
+
+
+    @Test
     void deletar() {
         Scope scope = Scope.builder()
                 .id(1L)
@@ -214,6 +239,16 @@ class UsuarioServiceTest {
         Mockito.verify(usuarioRepository).findById(usuario.getId());
         Mockito.verify(usuarioRepository).deleteById(usuario.getId());
     }
+
+    @Test
+    void deletar_usuarioNaoEncontrado_deveLancarExcecao() {
+        Mockito.when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
+
+        assertThrows(EmailNotFoundException.class, () -> usuarioService.deletar(999L));
+
+        Mockito.verify(usuarioRepository, Mockito.never()).deleteById(Mockito.any());
+    }
+
 
     @Test // este teste serve para testar as exceptions dos metodos da service, caso o email ja exista no banco de dados, ele deve lançar a exception EmailJaCadastradoException
     void deveRetornarUmaExceptionQuantoOEmailJaExistir() {

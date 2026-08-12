@@ -1,6 +1,7 @@
 package dev.samuel.auth_service.service;
 
 import dev.samuel.auth_service.entity.Scope;
+import dev.samuel.auth_service.exception.ScopeNotFoundException;
 import dev.samuel.auth_service.repository.ScopeRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,5 +35,12 @@ class ScopeServiceTest {
         scopeService.findByNome(scope.getNome());
 
         Mockito.verify(scopeRepository).findByNome(scope.getNome());
+    }
+
+    @Test
+    void findByNome_scopeNaoEncontrado_deveLancarExcecao() {
+        Mockito.when(scopeRepository.findByNome("INEXISTENTE")).thenReturn(Optional.empty());
+
+        assertThrows(ScopeNotFoundException.class, () -> scopeService.findByNome("INEXISTENTE"));
     }
 }

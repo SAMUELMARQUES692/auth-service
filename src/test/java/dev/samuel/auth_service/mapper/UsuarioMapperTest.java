@@ -32,6 +32,7 @@ class UsuarioMapperTest {
         assertEquals(request.nome(), usuario.getNome());
         assertEquals(request.email(), usuario.getEmail());
         assertEquals(request.senha(), usuario.getSenha());
+        assertTrue(usuario.getScopes() == null || usuario.getScopes().isEmpty());
     }
 
     @Test
@@ -54,10 +55,10 @@ class UsuarioMapperTest {
 
         assertNotNull(response);
 
-        assertEquals(response.id(), usuario.getId());
-        assertEquals(response.nome(), usuario.getNome());
-        assertEquals(response.email(), usuario.getEmail());
-        assertEquals(response.createdAt(), usuario.getCreatedAt());
+        assertEquals(usuario.getId(), response.id());
+        assertEquals(usuario.getNome(), response.nome());
+        assertEquals(usuario.getEmail(), response.email());
+        assertEquals(usuario.getCreatedAt(), response.createdAt());
     }
 
     @Test
@@ -72,7 +73,6 @@ class UsuarioMapperTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(scope))
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -90,6 +90,7 @@ class UsuarioMapperTest {
         assertEquals(request.nome(), usuario.getNome());
         assertEquals(request.email(), usuario.getEmail());
         assertEquals(request.senha(), usuario.getSenha());
+        assertTrue(usuario.getScopes() == null || usuario.getScopes().isEmpty());
     }
 
     @Test

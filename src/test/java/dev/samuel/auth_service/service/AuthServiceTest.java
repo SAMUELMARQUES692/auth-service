@@ -87,4 +87,18 @@ class AuthServiceTest {
 
         Mockito.verify(tokenService, Mockito.never()).gerarToken(Mockito.any());
     }
+
+    @Test
+    void login_emailNaoEncontrado_deveLancarExcecao() {
+        AuthRequest request = AuthRequest.builder()
+                .email("naoexiste@teste.com")
+                .senha("qualquerSenha")
+                .build();
+
+        Mockito.when(usuarioRepository.findByEmail(request.email())).thenReturn(Optional.empty());
+
+        assertThrows(UserOrPasswordIncorrectException.class, () -> authService.login(request));
+
+        Mockito.verify(tokenService, Mockito.never()).gerarToken(Mockito.any());
+    }
 }
