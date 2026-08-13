@@ -65,7 +65,6 @@ class UsuarioServiceTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(scope.getId()))
                 .build();
 
         Mockito.when(usuarioRepository.existsByEmail(request.email())).thenReturn(false);
@@ -128,7 +127,6 @@ class UsuarioServiceTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(1L))
                 .build();
 
         Mockito.when(usuarioRepository.findById(usuario.getId())).thenReturn(Optional.of(usuario));
@@ -149,7 +147,6 @@ class UsuarioServiceTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(1L))
                 .build();
 
         Mockito.when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
@@ -257,7 +254,6 @@ class UsuarioServiceTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(1L))
                 .build();
 
         Mockito.when(usuarioRepository.existsByEmail(request.email())).thenReturn(true);

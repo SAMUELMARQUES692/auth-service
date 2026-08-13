@@ -49,7 +49,6 @@ class UsuarioControllerTest extends BaseIntegrationTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(scopeAdmin.getId()))
                 .build();
 
         mockMvc.perform(post("/api/usuarios/cadastrar")
@@ -122,7 +121,6 @@ class UsuarioControllerTest extends BaseIntegrationTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(scope.getId()))
                 .build();
 
         mockMvc.perform(put("/api/usuarios/{id}", usuario.getId())

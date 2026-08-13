@@ -22,7 +22,6 @@ class UsuarioMapperTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(1L))
                 .build();
 
         Usuario usuario = mapper.toEntity(request);
@@ -73,6 +72,7 @@ class UsuarioMapperTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
+                .scopes(List.of(scope))
                 .createdAt(LocalDateTime.now())
                 .build();
 
@@ -80,7 +80,6 @@ class UsuarioMapperTest {
                 .nome("Nome Teste")
                 .email("Email Teste")
                 .senha("Senha Teste")
-                .scopes(List.of(1L))
                 .build();
 
         mapper.atualizarUsuario(request, usuario);
@@ -90,7 +89,7 @@ class UsuarioMapperTest {
         assertEquals(request.nome(), usuario.getNome());
         assertEquals(request.email(), usuario.getEmail());
         assertEquals(request.senha(), usuario.getSenha());
-        assertTrue(usuario.getScopes() == null || usuario.getScopes().isEmpty());
+        assertTrue(usuario.getScopes() != null);
     }
 
     @Test

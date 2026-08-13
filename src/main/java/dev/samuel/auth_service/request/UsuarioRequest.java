@@ -17,10 +17,6 @@ public record UsuarioRequest(
         String email,
 
         @NotBlank
-        String senha,
-
-        @NotEmpty
-        @NotNull
-        List<Long> scopes
+        String senha
 
 ) {}
