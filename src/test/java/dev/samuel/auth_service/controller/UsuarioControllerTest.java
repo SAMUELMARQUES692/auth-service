@@ -214,4 +214,61 @@ class UsuarioControllerTest extends BaseIntegrationTest {
                         .content(objectMapper.writeValueAsString(usuario)))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void atualizarComScopeUser() throws Exception{
+        Scope scope = scopeRepository.save(
+                Scope.builder()
+                        .nome("USER")
+                        .build()
+        );
+
+        Usuario usuario = usuarioRepository.save(
+                Usuario.builder()
+                        .nome("Nome Teste")
+                        .email("Email Teste")
+                        .senha(passwordEncoder.encode("Senha Teste"))
+                        .scopes(List.of(scope))
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+
+        UsuarioRequest request = UsuarioRequest.builder()
+                .nome("Nome Teste")
+                .email("Email Teste")
+                .senha("Senha Teste")
+                .build();
+
+        mockMvc.perform(put("/api/usuarios/{id}", usuario.getId())
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_USER")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(request)))
+                .andExpect(status().isForbidden());
+    }
+
+    @Test
+    void deletarComScopeUser() throws Exception {
+        Scope scope = scopeRepository.save(
+                Scope.builder()
+                        .nome("USER")
+                        .build()
+        );
+
+        Usuario usuario = usuarioRepository.save(
+                Usuario.builder()
+                        .nome("Nome Teste")
+                        .email("Email Teste")
+                        .senha(passwordEncoder.encode("Senha Teste"))
+                        .scopes(List.of(scope))
+                        .createdAt(LocalDateTime.now())
+                        .build()
+        );
+
+        mockMvc.perform(delete("/api/usuarios/{id}", usuario.getId())
+                        .with(jwt().authorities(new SimpleGrantedAuthority("SCOPE_USER")))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(usuario)))
+                .andExpect(status().isForbidden());
+    }
 }
