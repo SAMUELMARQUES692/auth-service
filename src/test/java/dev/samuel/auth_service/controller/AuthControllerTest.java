@@ -73,7 +73,7 @@ class AuthControllerTest extends BaseIntegrationTest {
     }
 
     @Test
-    void login_credenciaisInvalidas() throws Exception {
+    void loginCredenciaisInvalidas() throws Exception {
         AuthRequest request = AuthRequest.builder()
                 .email("Email Teste")
                 .senha("Senha Teste")

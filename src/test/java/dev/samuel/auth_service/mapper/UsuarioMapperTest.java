@@ -111,7 +111,7 @@ class UsuarioMapperTest {
     }
 
     @Test
-    void mapScopeEntitiesToStringScopes_scopesNull() {
+    void mapScopeEntitiesToStringScopesScopesNull() {
         List<String> resultado = mapper.mapScopeEntitiesToStringScopes(null);
 
         assertNotNull(resultado);
@@ -119,7 +119,7 @@ class UsuarioMapperTest {
     }
 
     @Test
-    void mapScopeEntitiesToStringScopes_listaVazia() {
+    void mapScopeEntitiesToStringScopesListaVazia() {
         List<String> resultado = mapper.mapScopeEntitiesToStringScopes(List.of());
 
         assertNotNull(resultado);

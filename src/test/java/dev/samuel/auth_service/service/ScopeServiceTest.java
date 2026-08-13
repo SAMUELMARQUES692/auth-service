@@ -38,7 +38,7 @@ class ScopeServiceTest {
     }
 
     @Test
-    void findByNome_scopeNaoEncontrado_deveLancarExcecao() {
+    void findByNomeScopeNaoEncontradoDeveLancarExcecao() {
         Mockito.when(scopeRepository.findByNome("INEXISTENTE")).thenReturn(Optional.empty());
 
         assertThrows(ScopeNotFoundException.class, () -> scopeService.findByNome("INEXISTENTE"));

@@ -144,7 +144,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void atualizar_usuarioNaoEncontrado_deveLancarExcecao() {
+    void atualizarUsuarioNaoEncontradoDeveLancarExcecao() {
         UsuarioRequest request = UsuarioRequest.builder()
                 .nome("Nome Teste")
                 .email("Email Teste")
@@ -209,7 +209,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void buscarPorId_usuarioNaoEncontrado_deveLancarExcecao() {
+    void buscarPorIdUsuarioNaoEncontradoDeveLancarExcecao() {
         Mockito.when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(EmailNotFoundException.class, () -> usuarioService.buscarPorId(999L));
@@ -241,7 +241,7 @@ class UsuarioServiceTest {
     }
 
     @Test
-    void deletar_usuarioNaoEncontrado_deveLancarExcecao() {
+    void deletarUsuarioNaoEncontradoDeveLancarExcecao() {
         Mockito.when(usuarioRepository.findById(999L)).thenReturn(Optional.empty());
 
         assertThrows(EmailNotFoundException.class, () -> usuarioService.deletar(999L));

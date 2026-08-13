@@ -68,7 +68,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void login_senhaIncorreta_deveLancarExcecao() {
+    void loginSenhaIncorretaDeveLancarExcecao() {
         Usuario usuario = Usuario.builder()
                 .id(1L)
                 .email("Email Teste")
@@ -89,7 +89,7 @@ class AuthServiceTest {
     }
 
     @Test
-    void login_emailNaoEncontrado_deveLancarExcecao() {
+    void loginEmailNaoEncontradoDeveLancarExcecao() {
         AuthRequest request = AuthRequest.builder()
                 .email("naoexiste@teste.com")
                 .senha("qualquerSenha")
