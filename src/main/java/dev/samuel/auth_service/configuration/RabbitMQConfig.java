@@ -17,6 +17,7 @@ public class RabbitMQConfig {
     public static final String EXCHANGE = "prolab.exchange";
     public static final String QUEUE_USUARIO = "usuario.queue";
     public static final String ROUTING_KEY_USUARIO = "usuario.mensagem";
+    public static final String ROUTING_KEY_USUARIO_ATUALIZADO = "usuario.atualizado";
 
     @Bean
     public TopicExchange exchange() {

@@ -23,9 +23,8 @@ public class EventPublisher {
     public void publicarUsuarioAtualizado(UsuarioEvent evento) {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.EXCHANGE,
-                RabbitMQConfig.ROUTING_KEY_USUARIO,
-                evento
-        );
+                RabbitMQConfig.ROUTING_KEY_USUARIO_ATUALIZADO,
+                evento);
     }
 
 }
