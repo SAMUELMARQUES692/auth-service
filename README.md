@@ -2,6 +2,19 @@
 
 Serviço de **autenticação e autorização** do ecossistema Prolab. É o **Authorization Server**: gerencia usuários e scopes, autentica credenciais e emite JWTs assinados com chave privada RSA. Também publica eventos de usuário no RabbitMQ para que outros serviços reajam de forma assíncrona (ex.: envio de e-mail de boas-vindas).
 
+## 🔗 Deploy em produção
+
+- **Frontend:** https://front-end-prolab-system.vercel.app
+- **Auth Service:** https://auth-service-xa2p.onrender.com
+- **Prolab System:** https://prolabsystem.onrender.com
+- **Message Service:** https://message-service-mp5h.onrender.com (worker, sem endpoint público)
+
+> ⚠️ Os backends estão hospedados no plano gratuito do Render, que "dorme" após inatividade. A primeira requisição após um período sem uso pode levar de 30 a 60 segundos para responder (cold start).
+
+## CORS
+
+Em produção, o CORS está restrito ao domínio do frontend: `https://front-end-prolab-system.vercel.app`. Para desenvolvimento local, ajuste `CorsConfig.java` ou use `addAllowedOriginPattern("*")` temporariamente.
+
 ## Arquitetura
 
 Faz parte de um ecossistema de três microsserviços:
